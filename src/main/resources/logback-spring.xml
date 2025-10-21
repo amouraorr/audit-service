@@ -1,0 +1,28 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <springProperty name="springAppName" source="spring.application.name"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp/>
+                <loggerName/>
+                <threadName/>
+                <logLevel/>
+                <message/>
+                <stackTrace/>
+                <mdc/>
+                <context>
+                    <keyValuePair>
+                        <key>app</key>
+                        <value>${springAppName:-audit-service}</value>
+                    </keyValuePair>
+                </context>
+            </providers>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
