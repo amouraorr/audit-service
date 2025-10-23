@@ -1,4 +1,4 @@
-package com.fiap.auditservice.infrastructure.kafka;
+package com.fiap.auditservice.infrastructure.config.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiap.auditservice.application.usecase.SaveAuditRecordUseCase;
