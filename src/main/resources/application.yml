@@ -1,11 +1,13 @@
 spring:
   application:
     name: audit-service
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/auditdb
-    username: audit
-    password: auditpass
-    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/auditservice_db}
+    username: ${SPRING_DATASOURCE_USERNAME:auditservice}
+    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.postgresql.Driver}
+
   jpa:
     properties:
       hibernate:
@@ -20,7 +22,7 @@ spring:
     locations: classpath:db/migration
 
 kafka:
-  bootstrap-servers: localhost:9092
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
   consumer:
     group-id: audit-service-group
     auto-offset-reset: earliest
@@ -30,7 +32,7 @@ logging:
     root: INFO
 
 server:
-  port: 8081
+  port: ${SERVER_PORT:8090}
 
 springdoc:
   api-docs:
