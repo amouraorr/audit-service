@@ -8,5 +8,5 @@ RUN mvn -B -pl audit-service -am -DskipTests package
 FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 COPY --from=build /work/audit-service/target/*.jar app.jar
-EXPOSE 8090
+EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/app.jar"]
