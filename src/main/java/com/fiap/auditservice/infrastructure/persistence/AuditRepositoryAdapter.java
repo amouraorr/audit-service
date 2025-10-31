@@ -6,6 +6,8 @@ import com.fiap.auditservice.domain.AuditRecord;
 import com.fiap.auditservice.domain.port.out.AuditRepositoryPort;
 import com.fiap.auditservice.infrastructure.persistence.jpa.AuditJpaEntity;
 import com.fiap.auditservice.infrastructure.persistence.jpa.AuditJpaRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -38,9 +40,9 @@ public class AuditRepositoryAdapter implements AuditRepositoryPort {
 
     @Override
     public List<AuditRecord> findAll(int limit) {
-        return jpaRepository.findAll()
-                .stream()
-                .limit(limit)
+        int size = Math.max(1, limit);
+        var page = jpaRepository.findAll(PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "createdAt")));
+        return page.stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
     }

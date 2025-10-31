@@ -44,7 +44,7 @@ public class AuditController {
     @GetMapping
     public ResponseEntity<List<AuditRecordDto>> listAudits(
             @RequestParam(name = "limit", defaultValue = "100") int limit) {
-        log.info("Request to list audits with limit={}", limit);
+        log.info("Solicitação para listar auditorias com limite={}", limit);
         List<AuditRecordDto> dtos = auditRepositoryPort.findAll(limit)
                 .stream()
                 .map(auditMapper::toDto)
@@ -55,12 +55,12 @@ public class AuditController {
     @Operation(summary = "Buscar registro de auditoria por id")
     @GetMapping("/{id}")
     public ResponseEntity<AuditRecordDto> getAuditById(@PathVariable("id") UUID id) {
-        log.info("Request to get audit id={}", id);
+        log.info("Solicitação para obter o ID de auditoria = {}", id);
         return auditRepositoryPort.findById(id)
                 .map(auditMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> {
-                    log.warn("Audit not found id={}", id);
+                    log.warn("Auditoria não encontrada id={}", id);
                     return ResponseEntity.notFound().build();
                 });
     }
@@ -68,16 +68,9 @@ public class AuditController {
     @Operation(summary = "Criar registro de auditoria")
     @PostMapping
     public ResponseEntity<AuditRecordDto> createAudit(@Valid @RequestBody AuditRecordDto auditRecordDto) {
-        log.info("Request to create audit eventType={} source={}", auditRecordDto.getEventType(), auditRecordDto.getSource());
+        log.info("Solicitação para criar auditoria eventType={} source={}", auditRecordDto.getEventType(), auditRecordDto.getSource());
 
         AuditRecord toSave = auditMapper.toDomain(auditRecordDto);
-
-        if (toSave.getId() == null) {
-            toSave.setId(UUID.randomUUID());
-        }
-        if (toSave.getCreatedAt() == null) {
-            toSave.setCreatedAt(java.time.OffsetDateTime.now());
-        }
 
         AuditRecord saved = saveAuditRecordUseCase.save(toSave);
 
@@ -88,7 +81,7 @@ public class AuditController {
                 .buildAndExpand(saved.getId())
                 .toUri();
 
-        log.info("Created audit id={} eventType={}", saved.getId(), saved.getEventType());
+        log.info("Cria registro de auditoria id={} eventType={}", saved.getId(), saved.getEventType());
         return ResponseEntity.created(location).body(responseDto);
     }
 }
