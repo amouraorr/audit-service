@@ -32,7 +32,11 @@ public class AuditKafkaConsumer {
             String topic = record.topic();
             String value = record.value();
 
-            log.info("Received kafka message from topic {} with key {}", topic, record.key());
+            log.info("Mensagem Kafka recebida do tópico={} partição={} offset={} chave={}",
+                    topic, record.partition(), record.offset(), record.key());
+
+            String preview = preview(value);
+            log.debug("Pré-visualização da mensagem: {}", preview);
 
             @SuppressWarnings("unchecked")
             Map<String, Object> payload = objectMapper.readValue(value == null ? "{}" : value, Map.class);
@@ -45,10 +49,16 @@ public class AuditKafkaConsumer {
             r.setCreatedAt(OffsetDateTime.now());
 
             saveAuditRecordUseCase.save(r);
-            log.info("Saved audit record id={} eventType={}", r.getId(), r.getEventType());
+            log.info("Registro de auditoria salvo id={} tipoEvento={}", r.getId(), r.getEventType());
 
         } catch (Exception ex) {
-            log.error("Failed to process kafka message", ex);
+            log.error("Falha ao processar mensagem Kafka", ex);
         }
+    }
+
+    private String preview(String s) {
+        if (s == null) return "";
+        int max = 800;
+        return s.length() <= max ? s : s.substring(0, max) + "...[truncado]";
     }
 }
