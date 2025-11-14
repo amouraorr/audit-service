@@ -18,7 +18,6 @@ public class SecurityConfigProd {
     @Bean("securityFilterChainProd")
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        // Endpoints públicos necessários para swagger/ui e health/info
         String[] publicMatchers = new String[] {
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
